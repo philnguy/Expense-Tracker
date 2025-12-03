@@ -18,7 +18,7 @@
             
             <div class="date-picker"> 
                 <i class="fas fa-calendar"></i>
-                2 December 2025
+                3 December 2025
             </div>
 
             <div class="export-btn"> 
@@ -37,10 +37,10 @@
                     <button class="card-menu"> <i class="fa fa-ellipsis-h"> </i></button>
                 </div>
                 <div class="amount income-amount"> $2,000 </div>
-                <div class="change"> 
+                <!-- <div class="change"> 
                     <i class="fas fa-arrow-up"></i>
                     12% vs Last Month
-                </div>
+                </div> -->
             </div>
 
             <div class="card">
@@ -48,11 +48,11 @@
                     <h3 class="card-title"> Monthly Expense </h3>
                     <button class="card-menu"> <i class="fa fa-ellipsis-h"> </i></button>
                 </div>
-                <div class="amount income-amount"> $1,000 </div>
-                <div class="change"> 
+                <div class="amount expense-amount"> $1,000 </div>
+                <!-- <div class="change"> 
                     <i class="fas fa-arrow-up"></i>
                     12% vs Last Month
-                </div>
+                </div> -->
             </div>
 
             <div class="card my-card">
@@ -85,7 +85,7 @@
         <div class="chart-section">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> Overview </h3>
+                    <h3 class="card-title"> Overview Expense Trend</h3>
                     <div style="display:  flex; gap: 1rem;"> 
                         <div class="dropdown"> Yearly  <i class="fas fa-chevron-down"></i> </div>
                         <button class="filter-btn">  
@@ -95,53 +95,26 @@
                     </div>
                 </div>
                 
+                
                 <div class="chart-container">
+                    <svg id="trendLineChart" width="100%" height="300"></svg>
+                    <div id="trendTooltip" class="tooltip"></div>
 
-                    <div class="chart-bar" style="height: 120px;"> </div>
-                    <div class="chart-bar" style="height: 80px;"> </div>
-                    <div class="chart-bar" style="height: 150px;"> </div>
-                    <div class="chart-bar" style="height: 120px;"> </div>
-                    <div class="chart-bar" style="height: 130px;"> </div>
-                    <div class="chart-bar" style="height: 140px;"> </div>
-                    <div class="chart-bar" style="height: 150px;"> </div>
-                    <div class="chart-bar" style="height: 120px;"> </div>
-                    <div class="chart-bar" style="height: 130px;"> </div>
-                    <div class="chart-bar" style="height: 140px;"> </div>
-                    <div class="chart-bar" style="height: 70px;"> </div>
-                    <div class="chart-bar active" style="height: 200px;"> 
-                        <div style="position: absolute;
-                            top: -30px;
-                            left: 50%;
-                            transform: translateX(-50%);
-                            background: white;
-                            padding: 0.25rem 0.5rem;
-                            border-radius: 4px; 
-                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                            font-size: 0.75rem;"> 
-                            <div style="font-weight: 600;"> Dec 2025 </div>
-                            <div style="color: green;"> Income: $987 </div>
-                            <div style="color: red;"> Expenses: $678 </div>
-                        </div>
-                        <div class="chart-bar-income" style="height: 120px;"> </div>
-                        <div class="chart-bar-expense" style="height: 80px;"> </div>
-                    </div>
-                    
-                    
                 </div>
 
                 <div class="chart-label">
-                    <span> Jan</span>
-                    <span> Feb</span>
-                    <span> Mar</span>
-                    <span> Apr</span>
-                    <span> May</span>
-                    <span> Jun</span>
-                    <span> Jul</span>
-                    <span> Aug</span>
-                    <span> Sep</span>
-                    <span> Oct</span>
-                    <span> Nov</span>
-                    <span> Dec</span>
+                    <span>Jan</span>
+                    <span>Feb</span>
+                    <span>Mar</span>
+                    <span>Apr</span>
+                    <span>May</span>
+                    <span>Jun</span>
+                    <span>Jul</span>
+                    <span>Aug</span>
+                    <span>Sep</span>
+                    <span>Oct</span>
+                    <span>Nov</span>
+                    <span>Dec</span>
                 </div>
             </div>
 
@@ -157,12 +130,12 @@
                 <div class="expenses-breakdown">
                     <div class="total-expenses"> $23,739</div>
 
-                    <div class="period-tabs">
+                    <!-- <div class="period-tabs">
 
                         <span class="period-tab"> Daily</span>
                         <span class="period-tab"> Weekly</span>
                         <span class="period-tab"> Monthly</span>
-                    </div>
+                    </div> -->
                     
                     <div class="period-amounts">
                         <span>Daily</span>
@@ -224,8 +197,158 @@
         </div>
         
 
+        <div class="card transactions-section" >
+            <div class="card-header">
+                <h3 class="card-title"> Recent Transactions</h3>
+
+                <div class="filters">
+                    <button class="filter-btn">
+                        <i class="fas fa-sort"> </i>
+                        Short
+                    </button>
+                    <button class="filter-btn">
+                        <i class="fas fa-filter"> </i>
+                        Filter
+                    </button>
+                </div>
+            </div>
+
+            <table class="transactions-table"> 
+                <thead>
+                    <tr>
+                        <th>Date <i class="fas fa-sort"></i></th>
+                        <th>Category <i class="fas fa-sort"></i></th>
+                        <th>Amount <i class="fas fa-sort"></i></th>
+                        <th> Status</th>
+                        <th> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td> Dec 1, 2025</td>
+                        <td> Subscription</td>
+                        <td> $60.00 </td>
+                        <td> <span class="status-success"> Success </span></td>
+                        <td> <button class="action-btn"> <i class="fas fa-ellipsis-h"> </i></button> </td>
+                    </tr>
+                    <tr>
+                        <td> Dec 1, 2025</td>
+                        <td> Transfer</td>
+                        <td> $32.00 </td>
+                        <td> <span class="status-success"> Success </span></td>
+                        <td> <button class="action-btn"> <i class="fas fa-ellipsis-h"> </i></button> </td>
+                    </tr>
+                    <tr>
+                        <td> Dec 2, 2025</td>
+                        <td> Subscription</td>
+                        <td> $60.00 </td>
+                        <td> <span class="status-success"> Success </span></td>
+                        <td> <button class="action-btn"> <i class="fas fa-ellipsis-h"> </i></button> </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        
+
+    
+
     </div>
     
+    <div class="add-buttons">
+        <button class="fab fab-income" onclick="openIncomeModal()" title="Add Income">
+            <i class="fas fa-plus"></i>
+        </button>
+
+        <button class="fab fab-expense" onclick="openExpenseModal()" title="Add Expense">
+            <i class="fas fa-minus"></i>
+        </button>
+
+    </div>
+
+    <div id="incomeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"> Add Income</h2>
+                <button class="close-btn" onclick="closeModal('incomeModal')">&times;</button>
+
+            </div>
+            <div class="modal-body">
+                <form id="incomeForm">
+                    <div class="form-group">
+                        <label class="form-label"> Amount</label>
+                        <input type="number" class="form-input" id = "incomeAmount" placeholder="Enter Amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category </label>
+                        <select class="form-select" id="incomeCategory" required>
+                            <option value="">Select category</option>
+                            <option value="salary">Salary</option>
+                            <option value="freelance">Freelance</option>
+                            <option value="business">Business</option>
+                            <option value="investment">Investment</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"> Description</label>
+                        <input type="text" class="form-input" id = "incomeDescription" placeholder="Enter Description">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-input" id="incomeDate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('incomeModal')"> Cancel</button>
+                <button class="btn btn-primary" onclick="addIncome()"> Add Income</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"> Add Expense</h2>
+                <button class="close-btn" onclick="closeModal('expenseModal')">&times;</button>
+
+            </div>
+            <div class="modal-body">
+                <form id="expenseForm">
+                    <div class="form-group">
+                        <label class="form-label"> Amount</label>
+                        <input type="number" class="form-input" id = "expenseAmount" placeholder="Enter Amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category </label>
+                        <select class="form-select" id="expenseCategory" required>
+                            <option value="">Select category</option>
+                            <option value="Food & Health">Food & Health</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Investments">Investments</option>
+                            <option value="Transfer">Transfer</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"> Description</label>
+                        <input type="text" class="form-input" id = "expenseDescription" placeholder="Enter Description">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-input" id="expenseDate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('expenseModal')"> Cancel</button>
+                <button class="btn btn-primary" onclick="addExpense()"> Add Expense</button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
     
