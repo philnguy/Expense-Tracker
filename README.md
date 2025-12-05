@@ -1,8 +1,8 @@
-# Expense Tracker
+# Expense Tracker / Personal Finance Tracker
 
-A lightweight, responsive, browser-based **Expense Tracking Application** built with **HTML, CSS, and vanilla JavaScript**. It allows users to enter income and expenses, visualize totals, track spending by category, and see trend charts.
+A full-stack **personal finance tracker** that allows users to log income and expenses, visualize spending patterns, and monitor trends through charts, category breakdowns, and time-based analytics (daily/weekly/monthly).  
 
-Can be found here: https://expense-tracker-pnguyen.netlify.app/ 
+
 ---
 
 ## Features
@@ -14,7 +14,7 @@ Can be found here: https://expense-tracker-pnguyen.netlify.app/
 - Daily, weekly, and monthly summaries  
 - Recent transactions table  
 - Category totals list  
-- Monthly trend line chart 
+- Monthly trend line chart  
 
 ### Data Entry
 - Add income (floating "+" button)  
@@ -29,13 +29,19 @@ Can be found here: https://expense-tracker-pnguyen.netlify.app/
   - High/low category  
   - Recent transaction list  
 
-### Storage
-- Data stored in memory inside JavaScript  
-- No backend or database required  
-
 ---
 
-## Project Structure
+## Approach & Design
+The project follows a clean, minimal REST-based architecture:​
+Frontend (HTML/CSS/JS)​
+
+Spring Boot REST API (Controllers → Service → Repository)​
+
+
+## Architecture
+
+
+### Project Structure: Frontend
 #### index.html  
 - Main application UI
 #### style.css         
@@ -43,6 +49,17 @@ Can be found here: https://expense-tracker-pnguyen.netlify.app/
 #### script.js      
 - Logic for expenses, income, charts, UI updates
 
+### Project Structure: Backend
+#### Transaction.java​/Income.java​/Expense.java​
+- entity models ​
+#### TransactionRepository.java​   
+- JPA repository​
+#### TransactionService.java ​
+- handles business logic​
+#### TransactionController.java ​
+- REST endpoints​
+#### ExpenseBackendApplication.java​
+- Runs the application​
 
 
 ## Testing and Verification
@@ -95,4 +112,21 @@ Add transactions from various months:
 **Expected:**
 - Chart displays new data points
 - Correct month-to-month trend line
+
+**Validation Process​:**
+- Dashboard Transaction Confirmation​
+
+- Load the dashboard to confirm backend transactions are correctly displayed and updated in real-time.​
+
+- Income and Expense Verification​
+
+- Add income and expenses, then verify immediate updates to totals and category breakdowns for accuracy.​
+
+- Trend Chart Analysis​
+
+- Review the 12-month trend chart with interactive tooltips to ensure accurate data representation and user interaction.​
+
+- Color-Coded Category Validation​
+
+-Validate the color-coded category breakdown for clear visual distinctions and accurate financial categorization.​
 
