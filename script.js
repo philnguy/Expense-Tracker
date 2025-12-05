@@ -1,27 +1,30 @@
-let transactions = [
-    {
-        id: 1,
-        date: '2025-12-1',
-        category: 'Subscription',
-        amount: -400,
-        status: 'Success',
-        type: 'expense'
-    }, {
-        id: 2,
-        date: '2025-12-2',
-        category: 'Transfer',
-        amount: -400,
-        status: 'Success',
-        type: 'expense'
-    }, {
-        id: 3,
-        date: '2025-12-3',
-        category: 'Transfer',
-        amount: -400,
-        status: 'Success',
-        type: 'expense'
-    },
-];
+
+let transactions = [];
+
+async function loadTransactions() {
+    try {
+        const response = await fetch("http://localhost:8080/api/transactions");
+        const data = await response.json();
+
+        console.log("Loaded transactions:", data);
+
+        
+         transactions = Array.isArray(data) ? data : [];
+
+        
+        updateDashboard();
+        updateTransactionsTable();
+        updatePeriodTotalsUI();
+        updateCategoryTotalsUI();
+        updateHighLowUI();
+        renderTrendChart();
+        
+    } catch (err) {
+        console.error("Failed to load transactions", err);
+    }
+}
+
+window.onload = loadTransactions;
 
 const CATEGORY_COLORS = {
     "Food & Health": "#ea580c",
@@ -97,70 +100,70 @@ window.onclick = function(event) {
     }
 }
 
-function addIncome() {
-    const amount = parseFloat(document.getElementById('incomeAmount').value);
-    const category = document.getElementById('incomeCategory').value;
-    const description = document.getElementById('incomeDescription').value;
-    const date = document.getElementById('incomeDate').value;
-
-    if (!amount || !category || !description || !date) {
-        alert('Please fill all required fields');
-        return;
-    }
-    const newTransaction = {
-        id: transactions.length + 1,
-        date: date,
-        category: category.charAt(0).toUpperCase() + category.slice(1),
-        amount: amount,
-        status: 'Success',
-        type: 'income',
-        description: description
+async function addIncome() {
+    const income = {
+        amount: parseFloat(document.getElementById("incomeAmount").value),
+        category: document.getElementById("incomeCategory").value,
+        description: document.getElementById("incomeDescription").value,
+        date: document.getElementById("incomeDate").value
     };
 
-    transactions.unshift(newTransaction);
+    try {
+        const response = await fetch("http://localhost:8080/api/income", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(income)
+        });
+
+        if (!response.ok) throw new Error("Failed to save income");
+
+        console.log("Income saved!");
+        closeModal("incomeModal");
+
+        await loadTransactions();  // Refresh UI
+        showNotification('Income added successfully!', 'success');
+    } catch (err) {
+        console.error(err);
+        alert("Could not add income. Check backend.");
+    }
     //monthlyIncome += amount;
-    updateDashboard();
-    updateTransactionsTable();
-    updateCategoryTotalsUI();
-    updatePeriodTotalsUI();
-    updateHighLowUI();
-    renderTrendChart();
-    closeModal('incomeModal');
-    showNotification('Income added successfully!', 'success');
-
 }
 
-function addExpense() {
-    const amount = parseFloat(document.getElementById('expenseAmount').value);
-    const category = document.getElementById('expenseCategory').value;
-    const description = document.getElementById('expenseDescription').value;
-    const date = document.getElementById('expenseDate').value;
-
-    if (!amount || !category || !description || !date) {
-        alert('Please fill all required fields');
-        return;
-    }
-    const newTransaction = {
-        id: transactions.length + 1,
-        date: date,
-        category: category.charAt(0).toUpperCase() + category.slice(1),
-        amount: -amount,
-        status: 'Success',
-        type: 'expense',
-        description: description
+async function addExpense() {
+    const expense = {
+        amount: parseFloat(document.getElementById("expenseAmount").value),
+        category: document.getElementById("expenseCategory").value,
+        description: document.getElementById("expenseDescription").value,
+        date: document.getElementById("expenseDate").value
     };
 
-    transactions.unshift(newTransaction);
+    try {
+        const response = await fetch("http://localhost:8080/api/expense", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(expense)
+        });
+
+        if (!response.ok) throw new Error("Failed to save expense");
+
+        console.log("Expense saved!");
+        closeModal("expenseModal");
+        await loadTransactions();
+        showNotification('expense added successfully!', 'success');
+    } catch (err) {
+        console.error(err);
+        alert("Could not add expense. Check backend.");
+    }
+    //transactions.unshift(newTransaction);
     //monthlyExpenses += amount;
-    updateDashboard();
-    updateTransactionsTable();
-    updatePeriodTotalsUI();
-    updateCategoryTotalsUI();
-    updateHighLowUI();
-    renderTrendChart();
-    closeModal('expenseModal');
-    showNotification('expense added successfully!', 'success');
+    
 }
+
+
 
 function updateDashboard() {
     const { income, expenses } = calculateMonthlyTotals();
@@ -285,15 +288,6 @@ function showNotification(message, type = 'success') {
         });
     });
 
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        updateDashboard();
-        updateTransactionsTable();
-        updatePeriodTotalsUI();
-        updateCategoryTotalsUI();
-        updateHighLowUI();
-        renderTrendChart();
-});
 
 
 function getCategoryTotals() {
@@ -508,10 +502,13 @@ function calculatePeriodTotals() {
     let daily = 0, weekly = 0, monthly = 0;
 
     transactions.forEach(e => {
+
+        if (e.type !== "expense") return;
+
         const date = new Date(e.date);
-        const amt = Math.abs(e.amount); 
+        const amt = Math.abs(e.amount);
 
-
+        // Daily
         if (
             date.getFullYear() === REFERENCE_DATE.getFullYear() &&
             date.getMonth() === REFERENCE_DATE.getMonth() &&
@@ -520,12 +517,12 @@ function calculatePeriodTotals() {
             daily += amt;
         }
 
-      
+        // Weekly
         if (isSameWeek(date, REFERENCE_DATE)) {
             weekly += amt;
         }
 
-       
+        // Monthly
         if (
             date.getFullYear() === REFERENCE_DATE.getFullYear() &&
             date.getMonth() === REFERENCE_DATE.getMonth()
@@ -536,6 +533,7 @@ function calculatePeriodTotals() {
 
     return { daily, weekly, monthly };
 }
+
 
 function updatePeriodTotalsUI() {
     const { daily, weekly, monthly } = calculatePeriodTotals();
@@ -566,3 +564,8 @@ function updateHighLowUI() {
     lowEl.textContent = `${low[0]} ($${low[1].toLocaleString()})`;
   }
 }
+
+
+
+  
+
